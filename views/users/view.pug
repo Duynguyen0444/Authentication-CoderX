@@ -1,0 +1,10 @@
+extends ../layouts/common
+
+block content
+    h1 User Infomation
+    a(href="/users") Users list
+    p Name: #{user.name}
+    p Email: #{user.email}
+    p Phone: #{user.phone}
+    a(href="/users/" + user.id + '/update' class="btn btn-primary mr-1") Update user    
+    a(href="/users/" + user.id + '/delete' class="btn btn-danger") Delete user

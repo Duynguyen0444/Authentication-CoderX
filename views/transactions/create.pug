@@ -1,0 +1,15 @@
+extends ../layouts/common
+
+block content
+    form(action='/transactions/create' method='POST' class="form-group")
+        select(name='userId' class="form-control")
+            each user in users
+                option(name= user.name, value= user.id) #{user.name}
+        select(name='bookId' class="form-control")
+            each book in books
+                option(name= book.title, value= book.id) #{book.title}
+        button(class="btn btn-primary") Submit
+
+
+
+

@@ -1,0 +1,28 @@
+extends ../layouts/common
+
+block content
+    h1 Manage transaction
+    h3
+        a(href="/transactions/create" class="badge badge-success") Thuê sách
+    h3
+        a(href="/" class="badge badge-info") Home    
+    table.table
+        thead
+            tr                
+                th(scope='col') Transactions                
+                th(scope='col') Status                
+        tbody
+            each transaction in transactions
+                tr            
+                    th
+                        p #{transaction.userName} đã mượn quyển sách: #{transaction.bookTitle}                                    
+                    td
+                        if(transaction.isComplete === true) 
+                            p Completed
+                        else
+                            p In progress
+                    td
+                        if(transaction.isComplete === false) 
+                            a(href="/transactions/"+ transaction.id +"/complete" class="badge badge-danger") Mark complete
+                        else
+                            span(class="badge badge-success") Completed

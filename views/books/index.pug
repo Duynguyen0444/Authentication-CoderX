@@ -1,0 +1,21 @@
+extends ../layouts/common
+
+block content
+    h1 Book libary
+
+    h3
+        a(href="/" class="badge badge-info") Home
+
+    form(action="/books/create" method="POST" class="form-group")
+        input(name="title" type="text" placeholder="Title" class="form-control" )        
+        input(name="decription" type="text" placeholder="Decription" class="form-control")        
+        button Add book
+
+    ul(class="list-group")
+        each book in books 
+            li(class="list-group-item")
+                p Title: #{book.title}                
+                a(href="/books/" + book.id, label="update" class="badge badge-warning ml-1") Update title                
+                a(href="/books/" + book.id + "/delete" label="delete" class="badge badge-danger ml-1") Delete 
+                p Decription: #{book.decription}
+

@@ -1,0 +1,29 @@
+extends ../layouts/common
+
+block content
+    h1 Users
+    h3
+        a(href="/users/create" class="badge badge-success") Create users
+    h3
+        a(href="/" class="badge badge-info") Home
+
+    table.table
+        thead
+            tr                
+                th(scope='col') Name                
+                th(scope='col') Email
+                th(scope='col') Phone
+                th(scope='col') View
+        tbody
+            each user in users
+                tr            
+                    th=user.name
+                    td=user.email
+                    td=user.phone
+                    td 
+                        a(href="/users/view/" + user.id class="badge badge-warning ml-1") Details            
+    //- ul(class="list-group")
+    //-     each user in users
+    //-         li(class="list-group-item")
+    //-             span= user.name
+    //-             a(href="/users/view/" + user.id class="badge badge-warning ml-1") view
