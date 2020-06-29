@@ -1,9 +1,9 @@
-require('dotenv').config()
-console.log(process.env.EMAIL_NOTIFICATION);
+require("dotenv").config();
+console.log(process.env.SENDGRID_API_KEY);
 
 // url https://api.sendgrid.com/v3/mail/send \
-// header 'authorization: Bearer <<YOUR_API_KEY>>' 
-// header 'content-type: application/json' 
+// header 'authorization: Bearer <<YOUR_API_KEY>>'
+// header 'content-type: application/json'
 // data '{"personalizations":[{"to":[{"email":"john.doe@example.com","name":"John Doe"}],"subject":"Hello, World!"}],"content": [{"type": "text/plain", "value": "Heya!"}],"from":{"email":"sam.smith@example.com","name":"Sam Smith"},"reply_to":{"email":"sam.smith@example.com","name":"Sam Smith"}}'
 
 const express = require("express");
@@ -25,7 +25,7 @@ app.set("views", "./views");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(cookieParser(process.env.SESSION_SECRET));
+app.use(cookieParser(process.env.SENDGRID_API_KEY));
 
 let count = 0;
 app.get("/", (req, res) => {

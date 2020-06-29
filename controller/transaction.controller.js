@@ -1,10 +1,15 @@
 var db = require("../db");
 const shortid = require("shortid");
-const { response } = require("express");
+const pagination = require("../utils/pagination");
 
 module.exports.index = (req, res) => {
+  let filtered = db.get("transactions").value();
+  let result = pagination(req.query.page, filtered);
+
   res.render("transactions/index", {
-    transactions: db.get("transactions").value(),
+    // transactions: db.get("transactions").value(),
+    transactions: result.filtered,
+    pagination: result.pagination,
   });
 };
 

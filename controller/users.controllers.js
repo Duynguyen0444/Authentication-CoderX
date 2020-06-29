@@ -1,10 +1,21 @@
 var db = require("../db");
 const shortid = require("shortid");
 const bcrypt = require("bcrypt");
+const pagination = require("../utils/pagination");
 
 module.exports.index = (req, res) => {
+  // let page = parseInt(req.query.page) || 1;
+  // let perPage = 8;
+
+  // let begin = (page - 1) * perPage;
+  // let end = page * perPage;
+  // let result = pagination(req.query.page, filtered);
+  let filtered = db.get("users").value();
+  let result = pagination(req.query.page, filtered);
+
   res.render("users/index", {
-    users: db.get("users").value(),
+    users: result.filtered,
+    pagination: result.pagination,
   });
 };
 
@@ -17,14 +28,14 @@ module.exports.createPost = async (request, response) => {
   let hashedPassword = await bcrypt.hash(newUser.password, 10);
   newUser.id = shortid.generate();
   newUser.isAdmin = false;
-  newUser.password = hashedPassword
+  newUser.password = hashedPassword;
   db.get("users").push(newUser).write();
   response.redirect("/users");
-  
+
   // req.body.password = hashedPassword;
   // db.get("users")
   //   .push(req.body)
-  //   .write();  
+  //   .write();
   // res.redirect("/users");
 };
 

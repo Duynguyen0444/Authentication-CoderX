@@ -18,4 +18,19 @@ block content
                 a(href="/books/" + book.id, label="update" class="badge badge-warning ml-1") Update title                
                 a(href="/books/" + book.id + "/delete" label="delete" class="badge badge-danger ml-1") Delete 
                 p Decription: #{book.decription}
+    nav(aria-label='...')
+        ul.pagination
+            li.page-item(class=pagination.prev ? "" : "disabled")
+                a.page-link(href='/books?page=' + pagination.prev, tabindex='-1' aria-disabled='true') Previous
+            if pagination.prev
+                li.page-item
+                    a.page-link(href='/books?page=' + pagination.prev) #{pagination.prev}
+            li.page-item.active(aria-current='page')
+                a.page-link(href='/books?page=' + pagination.page) #{pagination.page}
+                    span.sr-only (current)
+            if pagination.next
+                li.page-item
+                    a.page-link(href='/books?page=' + pagination.next) #{pagination.next}
+            li.page-item(class=pagination.next ? "" : "disabled")
+                a.page-link(href='/books?page=' + pagination.next) Next
 
