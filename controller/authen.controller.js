@@ -1,5 +1,4 @@
 var db = require("../db");
-var md5 = require("md5");
 const shortid = require("shortid");
 const bcrypt = require("bcrypt");
 
@@ -21,6 +20,7 @@ module.exports.registerPost = async (request, response) => {
   newUser.id = shortid.generate();
   newUser.isAdmin = false;
   newUser.password = hashedPassword;
+
   db.get("users").push(newUser).write();
   response.redirect("/users");
 };
@@ -46,6 +46,7 @@ module.exports.loginPost = async (request, response) => {
   //   });
   //   return;
   // }
+
   // --------------Check login over time--------------
   if (!user.wrongLoginCount) {
     db.get("users").find({ id: user.id }).set("wrongLoginCount", 0).write();
@@ -69,7 +70,6 @@ module.exports.loginPost = async (request, response) => {
       errors: ["Wrong password."],
       values: request.body,
     });
-
     return;
   }
 
@@ -77,11 +77,12 @@ module.exports.loginPost = async (request, response) => {
   response.cookie("userId", user.id, {
     signed: true,
   });
-  if (!user.isAdmin) {
-    response.render("authens/login", {
-      errors: ["Your account is not allowed"],
-    });
-    return;
-  }
+  // Check admin mới đc login
+  // if (!user.isAdmin) {
+  //   response.render("authens/login", {
+  //     errors: ["Your account is not allowed"],
+  //   });
+  //   return;
+  // }
   response.redirect("/users");
 };

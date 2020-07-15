@@ -1,21 +1,35 @@
-var db = require("../db");
-const shortid = require("shortid");
-const bcrypt = require("bcrypt");
-const pagination = require("../utils/pagination");
+// var db = require("../db");
+var User = require("../models/user.model");
+var shortid = require("shortid");
+var bcrypt = require("bcrypt");
+var pagination = require("../utils/pagination");
+var cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
+// cloudinary.config({
+//   cloud_name: "dqxudw2je",
+//   api_key: 369422698625971,
+//   api_secret: "kyihKLIG-FAqWXXoXFAOEhXvjRc"
+// });
 
 module.exports.index = (req, res) => {
-  // let page = parseInt(req.query.page) || 1;
-  // let perPage = 8;
+  //let filtered = db.get("users").value();  
+  //let result = pagination(req.query.page, filtered);
 
-  // let begin = (page - 1) * perPage;
-  // let end = page * perPage;
-  // let result = pagination(req.query.page, filtered);
-  let filtered = db.get("users").value();
-  let result = pagination(req.query.page, filtered);
-
-  res.render("users/index", {
-    users: result.filtered,
-    pagination: result.pagination,
+  // res.render("users/index", {
+  //   users: result.filtered,
+  //   pagination: result.pagination,
+  // });
+  User.find().then(function (user) {
+    res.render("users/index", {
+      // users: result.filtered,
+      // pagination: result.pagination,
+      user: user
+    });
   });
 };
 
@@ -26,10 +40,16 @@ module.exports.create = (request, response) => {
 module.exports.createPost = async (request, response) => {
   let newUser = request.body;
   let hashedPassword = await bcrypt.hash(newUser.password, 10);
+
   newUser.id = shortid.generate();
   newUser.isAdmin = false;
   newUser.password = hashedPassword;
-  db.get("users").push(newUser).write();
+  // Chuyển đổi path image
+  newUser.avatar =
+    "https://res.cloudinary.com/malburo/image/upload/v1587739176/default-avatar_o2xet3.webp";
+
+  //db.get("users").push(newUser).write();
+  await User.create(newUser);
   response.redirect("/users");
 
   // req.body.password = hashedPassword;
@@ -38,22 +58,8 @@ module.exports.createPost = async (request, response) => {
   //   .write();
   // res.redirect("/users");
 };
-
-module.exports.update = (request, response) => {
-  let id = request.params.id;
-  let userUpdate = db.get("users").find({ id: id }).value();
-  response.render("users/update", {
-    user: userUpdate,
-  });
-};
-
-module.exports.updatePost = (request, response) => {
-  let id = request.params.id;
-  db.get("users").find({ id: id }).assign({ name: request.body.name }).write();
-  response.redirect("/users");
-};
-
-module.exports.viewUser = (request, response) => {
+// ---------------------View user---------------------
+module.exports.view = (request, response) => {
   let id = request.params.id;
   let user = db.get("users").find({ id: id }).value();
   response.render("users/view", {
@@ -61,8 +67,45 @@ module.exports.viewUser = (request, response) => {
   });
 };
 
-module.exports.delete = (request, response) => {
+// ---------------------Update User---------------------
+module.exports.update = async (request, response) => {
   let id = request.params.id;
-  db.get("users").remove({ id: id }).write();
+  //let userUpdate = db.get("users").find({ id: id }).value();
+
+  await User.findByIdAndUpdate({ id: id });
+  response.render("users/update", {
+    user: userUpdate,
+  });
+};
+
+module.exports.updatePost = async (request, response) => {
+  let id = request.params.id;
+  let requestBody = request.body;
+
+  //requestBody.avatar = request.file.path.split("\\").slice(1).join("/");
+  cloudinary.uploader.upload(request.file.path, async function (error, result) {
+    requestBody.avatar = result.url;
+
+    // db.get("users")
+    //   .find({ id: id })
+    //   .assign({ name: requestBody.name, avatar: requestBody.avatar })
+    //   .write();
+
+    await User.findByIdAndUpdate(id, {
+      name: requestBody.name,
+      avatar: requestBody.avatar,
+    });
+    response.redirect("/users");
+  });
+  response.redirect("/users");
+};
+
+// ---------------------Delete User---------------------
+module.exports.delete = async (request, response) => {
+  let id = request.params.id;
+
+  //db.get("users").remove({ id: id }).write();
+
+  await User.findByIdAndRemove({ id: id });
   response.redirect("/users");
 };

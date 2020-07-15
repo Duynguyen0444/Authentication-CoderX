@@ -1,7 +1,13 @@
 extends ../layouts/common
 
 block content
-    h1 Update user
-    form(action="/users/" + user.id + "/update" method="POST" class="form-group")
-        input(type="text" name="name" placeholder="New name" class="form-control")
-        button(class="btn btn-primary") Update
+    //- h1 Update user
+    //- form(action="/users/" + user.id + "/update" method="POST" class="form-group")
+    //-     input(type="text" name="name" placeholder="New name" class="form-control")
+    //-     button(class="btn btn-primary") Update
+    img.rounded-circle(src= user.avatar, width="150" height="150" style="object-fit: cover")
+    br
+    form(action=`/users/${user.id}/update`, method='post' enctype='multipart/form-data')
+        input(type='file' name='avatar')
+        input(type="text" name="name" placeholder="new name")
+        button Update

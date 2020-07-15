@@ -2,9 +2,9 @@ const { request } = require("express");
 const db = require("../db");
 
 module.exports.requireAuthen = (request, repsonse, next) => {
-  //Check chưa tồn tại cookie    
+  //Check chưa tồn tại cookie
   if (!request.signedCookies.userId) {
-    repsonse.redirect("authen/login");    
+    repsonse.redirect("authen/login");
     return;
   }
 

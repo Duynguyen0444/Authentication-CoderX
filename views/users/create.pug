@@ -8,7 +8,7 @@ block content
         each error in errors
             .alert.alert-danger=error
 
-    form(action="/users/create" method="POST" class="form-group")
+    form(action="/users/create" method="POST" class="form-group" enctype="multipart/form-data")
         label(for="name") Name
         input#name(type="text" name="name" placeholder="Name" class="form-control" value=values ? values.name : "")
         br
@@ -20,5 +20,8 @@ block content
         br
         label(for="password") Password
         input#password(type="password" name="password" placeholder="Password" class="form-control" value=values ? values.password : "")
+        br                
+        label(for="avatar") Avatar
+        input#avatar.form-control-file(type="file" name="avatar")
         br
         button(class="btn btn-primary") Add User

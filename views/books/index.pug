@@ -1,23 +1,85 @@
 extends ../layouts/common
 
 block content
-    h1 Book libary
+    //- h1 Book libary
 
-    h3
-        a(href="/" class="badge badge-info") Home
+    //- h3
+    //-     a(href="/" class="badge badge-info") Home
 
-    form(action="/books/create" method="POST" class="form-group")
-        input(name="title" type="text" placeholder="Title" class="form-control" )        
-        input(name="decription" type="text" placeholder="Decription" class="form-control")        
-        button Add book
+    //- form(action="/books/create" method="POST" class="form-group")
+    //-     input(name="title" type="text" placeholder="Title" class="form-control" )        
+    //-     input(name="decription" type="text" placeholder="Decription" class="form-control")        
+    //-     button Add book
 
-    ul(class="list-group")
-        each book in books 
-            li(class="list-group-item")
-                p Title: #{book.title}                
-                a(href="/books/" + book.id, label="update" class="badge badge-warning ml-1") Update title                
-                a(href="/books/" + book.id + "/delete" label="delete" class="badge badge-danger ml-1") Delete 
-                p Decription: #{book.decription}
+    //- .hire.ml-auto.d-flex.align-items-center
+    //-     span.text-success Cart (#{count})
+    //-     form(action="/transactions" method="POST")
+    //-         button.btn.btn-success.ml-2 Hire
+
+    //- ul(class="list-group")
+    //-     each book in books 
+    //-         li(class="list-group-item")
+    //-             p Title: #{book.title}                
+    //-             a(href="/books/" + book.id, label="update" class="badge badge-warning ml-1") Update title                
+    //-             a(href="/books/" + book.id + "/delete" label="delete" class="badge badge-danger ml-1") Delete 
+    //-             p Decription: #{book.decription}
+
+    //- Add book
+    .container(class= user ? (user.isAdmin ? '' : 'd-none') : 'd-none')
+        h3 Add book  
+
+        form(action="/books/create" method="POST" class="form-group")
+            .form-group
+                lable Title:
+                input.form-control(type="text" name="title" style="width:350px")
+                lable Description:
+                input.form-control(type="text" name="description" style="width:350px")
+            button.btn.btn-success Add
+
+    //- List manage book
+    .container.pt-5
+    .heading.d-flex.align-items-center
+        h1 Books
+        .hire.ml-auto.d-flex.align-items-center
+            span.text-success Cart (#{count})
+            form(action="/transactions" method="POST")
+                button.btn.btn-success.ml-2 Hire
+    table.table.table-bordered.my-3(class= user ? (user.isAdmin ? '' : 'd-none') : 'd-none')
+        tr
+            th Book cover
+            th Book title
+            th Description
+            th.text-center(colspan="2") Action
+        each book in books
+            tr
+                td
+                    if book.coverUrl
+                        img.rounded(src= book.coverUrl width="64" height="64")
+                    else
+                        img.rounded(src="https://res.cloudinary.com/dkh65bchm/image/upload/v1587720347/default-book_gwqxgy.jpg" width="64" height="64")
+                td= book.title
+                td= book.description
+                td.text-center
+                    a.btn.btn-info(href="/books/" + book.id + "/update") Update cover book
+                td.text-center
+                    a.btn.btn-danger(href="/books/" + book.id + "/delete") Delete
+
+    //- Show book 
+    .container(class= user ? (user.isAdmin ? 'd-none' : '') : '')
+        .pt-5.d-flex.flex-wrap
+            each book in books
+                .col-6.col-lg-3.my-2
+                    .card
+                        if book.avatar
+                            img.w-100(src= book.coverUrl)
+                        else
+                            img.w-100(src="https://res.cloudinary.com/dkh65bchm/image/upload/v1587720347/default-book_gwqxgy.jpg")
+                        .card-body
+                            h5.card-title=book.title
+                            p.card-text=book.description
+                            a.btn.btn-primary(href='/cart/add/' + book.id) Add to cart
+
+    //- Pagination
     nav(aria-label='...')
         ul.pagination
             li.page-item(class=pagination.prev ? "" : "disabled")

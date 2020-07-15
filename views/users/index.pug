@@ -10,18 +10,21 @@ block content
     table.table
         thead
             tr                
+                th(scope='col') Avatar
                 th(scope='col') Name                
                 th(scope='col') Email
                 th(scope='col') Phone
                 th(scope='col') View
         tbody
             each user in users
-                tr            
+                tr               
+                    th  
+                        img(src=user.avatar, alt="alt" width="30")                 
                     th=user.name
                     td=user.email
                     td=user.phone
                     td 
-                        a(href="/users/view/" + user.id class="badge badge-warning ml-1") Details
+                        a(href="/users/view/" + user.id class="badge badge-warning ml-1") Profile
     nav(aria-label='...')
         ul.pagination
             li.page-item(class=pagination.prev ? "" : "disabled")

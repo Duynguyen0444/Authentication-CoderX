@@ -1,8 +1,10 @@
 const express = require("express");
+var multer = require("multer");
+
 var router = express.Router();
 var userController = require("../controller/users.controllers");
 var userValidate = require("../validate/users.validate");
-// var authenMiddleware = require("../middleware/authen.middleware");
+var upload = multer({ dest: "./public/uploads/" });
 
 router.get("/", userController.index);
 
@@ -14,14 +16,19 @@ router.get("/", userController.index);
 
 //------------------------------Create user------------------------------
 router.get("/create", userController.create);
-router.post("/create", userValidate.postCreate, userController.createPost);
+router.post(
+  "/create",
+  upload.single("avatar"),
+  userValidate.postCreate,
+  userController.createPost
+);
 
 //------------------------------View user------------------------------
-router.get("/view/:id", userController.viewUser);
+router.get("/view/:id", userController.view);
 
 //------------------------------Update------------------------------
 router.get("/:id/update", userController.update);
-router.post("/:id/update", userController.updatePost);
+router.post("/:id/update", upload.single("avatar"), userController.updatePost);
 
 //------------------------------Remove------------------------------
 router.get("/:id/delete", userController.delete);
