@@ -42,24 +42,9 @@ app.get('/', (req, res) => {
 	res.render('index');
 });
 
-app.use(
-	'/users',
-	authenMiddleware.requireAuthen,
-	//adminMiddleware.requireRole(true),
-	userRouter
-);
-app.use(
-	'/books',
-	//authenMiddleware.requireAuthen,
-	// adminMiddleware.requireRole(true),
-	bookRouter
-);
-app.use(
-	'/transactions',
-	authenMiddleware.requireAuthen,
-	//adminMiddleware.requireRole(true),
-	transactionRouter
-);
+app.use('/users', authenMiddleware.requireAuthen, adminMiddleware.requireRole(true), userRouter);
+app.use('/books', authenMiddleware.requireAuthen, adminMiddleware.requireRole(true), bookRouter);
+app.use('/transactions', authenMiddleware.requireAuthen, adminMiddleware.requireRole(true), transactionRouter);
 app.use('/authen', authenRouter);
 
 app.listen(port, () => {
