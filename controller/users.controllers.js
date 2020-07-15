@@ -1,4 +1,4 @@
-// var db = require("../db");
+var db = require("../db");
 var User = require('../models/user.model');
 var shortid = require('shortid');
 var bcrypt = require('bcrypt');
